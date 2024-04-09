@@ -6,7 +6,8 @@
 #add MathOptInterface
 using JuMP      #load the package JuMP
 using Clp       #load the package Clp (an open linear-programming solver)
-# using Gurobi   #The commercial optimizer Gurobi requires installation
+using Gurobi     #load package Gurobi 
+
 
 #The ? can be put infront of commands, variables, and functions to get more information.
 #Note that is applied on the main object, hence to ask about an element in an array do:
@@ -14,8 +15,8 @@ using Clp       #load the package Clp (an open linear-programming solver)
 #?element
 
 #Build the model and get variables and constraints back (see intro_mod.jl)
-include("intro_mod.jl")
-m, x, nutrition_demands = build_diet_model("intro_dat.jl")
+include("bio_mod.jl")
+m, x, nutrition_demands = build_bio_model("bio_dat.jl")
 print(m) # prints the model instance
 
 set_optimizer(m, Clp.Optimizer)
