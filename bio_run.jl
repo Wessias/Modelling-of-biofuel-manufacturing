@@ -16,7 +16,7 @@ using Gurobi     #load package Gurobi
 
 #Build the model and get variables and constraints back (see intro_mod.jl)
 include("bio_mod.jl")
-m, x, nutrition_demands = build_bio_model("bio_dat.jl")
+m, A, V = build_bio_model("bio_dat.jl")
 print(m) # prints the model instance
 
 set_optimizer(m, Clp.Optimizer)
