@@ -16,9 +16,8 @@ P_p = 1. #Price of petrol $/l
 P_m = 1.5 #Price of methanol $/l
 T  = [0.2, 0.05, 0] #Tax proportion on blends
 
-Water_max = 5000.
-Area_max = 1600.
-Petrol_max = 150_000.
-Fuel_demand = 280_000.
-
+Water_max = 5000
+Area_max = 1600
+Petrol_max = 150_000
+Fuel_demand = 280_000
 
