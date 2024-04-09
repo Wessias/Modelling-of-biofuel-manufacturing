@@ -34,23 +34,23 @@ function build_bio_model(data_file::String)
   # Constraints
   @constraint(model, biodiesel_production_constraint,
     0.9 * sum(B[j] * V[j] for j in J) == sum(O[i] * Y[i] * A[i] for i in I)
-  )  # Production of biodiesel and vegetable oil should match
+  )  # Production of biodiesel and vegetable oil should match [l]
 
   @constraint(model, oil_demand_constraint,
     sum(V[j] for j in J) >= Fuel_demand
-  )  # Need to meet oil demand of Fuel_demand liters
+  )  # Need to meet oil demand of Fuel_demand [liters]
 
   @constraint(model, area_limit_constraint,
     sum(A[i] for i in I) <= Area_max
-  )  # Limited area available for farming
+  )  # Limited area available for farming [ha]
 
   @constraint(model, water_limit_constraint,
     sum(A[i] * W[i] for i in I) <= Water_max
-  )  # Limited amount of water that can be used
+  )  # Limited amount of water that can be used [Ml]
 
   @constraint(model, petrol_limit_constraint,
     sum((1 - B[j]) * V[j] for j in J) <= Petrol_max
-  )  # Limited amount of petrol diesel available
+  )  # Limited amount of petrol diesel available [l]
 
 
   return model, A, V
