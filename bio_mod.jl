@@ -23,11 +23,14 @@ function build_bio_model(data_file::String)
   model = Model()
 
   #Define variables
-  @variable(model, A[I] >= 0) # amount of ha used to cultivate i [crop]
-  @variable(model, V[j] >= 0) # Volume (liters) of j produced [blend]
+  @variable(model, A[i in I] >= 0) # amount of ha used to cultivate i [crop]
+  @variable(model, V[j in J] >= 0) # Volume (liters) of j produced [blend]
 
   #Maximize profit <=> maximize "Earnt - cost of petrol and methanol"
-  @objective(model, Max, sum((1-T)[j] * P[j] * V[j] - P_p * (1 - B[j])V[j] for j in J) - sum(P_m * 0.2 * O[i] * Y[i] * A[i] for i in I))
+  @objective(model, Max,
+        sum((1 .- T[j]) .* P[j] .* V[j] - P_p .* (1 .- B[j]) .* V[j] for j in J) -
+        sum(P_m .* 0.2 .* O[i] .* Y[i] .* A[i] for i in I)
+    )
 
 
   #Constraints

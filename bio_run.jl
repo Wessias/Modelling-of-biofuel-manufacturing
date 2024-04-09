@@ -6,7 +6,7 @@
 #add MathOptInterface
 using JuMP      #load the package JuMP
 using Clp       #load the package Clp (an open linear-programming solver)
-using Gurobi     #load package Gurobi 
+#using Gurobi     #load package Gurobi 
 
 
 #The ? can be put infront of commands, variables, and functions to get more information.
@@ -16,20 +16,21 @@ using Gurobi     #load package Gurobi
 
 #Build the model and get variables and constraints back (see intro_mod.jl)
 include("bio_mod.jl")
-m, A, V = build_bio_model("bio_dat.jl")
-print(m) # prints the model instance
+model, A, V = build_bio_model("bio_dat.jl")
+print(model) # prints the model instance
 
-set_optimizer(m, Clp.Optimizer)
-set_optimizer_attribute(m, "LogLevel", 1)
+set_optimizer(model, Clp.Optimizer)
+set_optimizer_attribute(model, "LogLevel", 1)
 # set_optimizer(m, Gurobi.Optimizer)
-optimize!(m)
+optimize!(model)
 
-println("z =  ", objective_value(m))   		# display the optimal solution
-println("x =  ", value.(x.data))               # f.(arr) applies f to all elements of arr
-println("Foods in solution: ", foods[[value(x[i]) > 0 for i in I]])
-println("reduced cost =  ", dual.(LowerBoundRef.(x.data)))
-protein_demand = nutrition_demands[findfirst(nutrients .== "protein")]
-println("protein dual =  ", dual(protein_demand)) # See JuMP doc for dual vs shadow_price
+println("z =  ", objective_value(model))   		# display the optimal solution
+println("A =  ", value.(A.data))  
+println("V =  ", value.(V.data))               # f.(arr) applies f to all elements of arr
+
+
+
+
 
 using MathOptInterface
 # You can always define aid functions to simply your life, as below
@@ -45,24 +46,24 @@ function get_slack(constraint::ConstraintRef)::Float64  # If you dont want you d
   row_val = value(con_func)
   return min(interval.upper - row_val, row_val - interval.lower)
 end
-fat_demand = nutrition_demands[findfirst(nutrients .== "fat")]
-println("fat slack =  ", get_slack(fat_demand))
+#fat_demand = nutrition_demands[findfirst(nutrients .== "fat")]
+#println("fat slack =  ", get_slack(fat_demand))
 
 
 # Note the level of sodium, modify the model to restrict it e.g.
-amount_of_sodium = @expression(m, sum(N[i,4]*x[i] for i in I))
-sodium_constarint = @constraint(m, amount_of_sodium <= 2000 )
-optimize!(m)
-println("amount of sodium = ", value(amount_of_sodium))
+#amount_of_sodium = @expression(m, sum(N[i,4]*x[i] for i in I))
+#sodium_constarint = @constraint(m, amount_of_sodium <= 2000 )
+#optimize!(m)
+#println("amount of sodium = ", value(amount_of_sodium))
 
 # And modify the constraint
-set_normalized_rhs(sodium_constarint, 1500)
-optimize!(m)
-println("Solve status = ", termination_status(m))
+#set_normalized_rhs(sodium_constarint, 1500)
+#optimize!(m)
+#println("Solve status = ", termination_status(m))
 # Multiple times
-set_normalized_rhs(sodium_constarint, 2000)
-optimize!(m)
-println("Solve status = ", termination_status(m))
+#set_normalized_rhs(sodium_constarint, 2000)
+#optimize!(model)
+#println("Solve status = ", termination_status(model))
 
 #To modify the objective, change c then change the objective by calling:
 #@objective(m, Min, sum(c[i]*x[i] for i in I))
