@@ -16,6 +16,7 @@ function build_bio_model(data_file::String)
   #P_p: Price of petrol $/l
   #P_m: Price of methanol $/l
   #T: Tax proportion on blends
+  #
 
 
   #name the model
@@ -31,10 +32,10 @@ function build_bio_model(data_file::String)
 
   #Constraints
   @constraint(model, 0.9*sum(B[j]*V[j] for j in J) == sum(O[i]*Y[i]*A[i] for i in I)) #Proudction of biodisel and vegetable oil should match
-  @constraint(model, sum(V[j] j in J) >= 280_000) #Need to meet oil demand of 280 000 liters
-  @constraint(model, sum(A[i] for i in I) <= 1600) #Limited area to farm
-  @constraint(model, sum(A[i]*W[i] for i in I) <= 5000) #Limited amount of water we can use
-  @constraint(model, sum((1-B[j])V_j for j in J) <= 150_000) #Limited amount of petrol diesel available
+  @constraint(model, sum(V[j] j in J) >= Fuel_demand) #Need to meet oil demand of 280 000 liters
+  @constraint(model, sum(A[i] for i in I) <= Area_max) #Limited area to farm
+  @constraint(model, sum(A[i]*W[i] for i in I) <= Water_max) #Limited amount of water we can use
+  @constraint(model, sum((1-B[j])V_j for j in J) <= Petrol_max) #Limited amount of petrol diesel available
   
 
   return model, A, V
