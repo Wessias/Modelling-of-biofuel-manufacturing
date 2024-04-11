@@ -6,7 +6,7 @@
 #add MathOptInterface
 using JuMP      #load the package JuMP
 using Clp       #load the package Clp (an open linear-programming solver)
-#using Gurobi     #load package Gurobi 
+using Gurobi     #load package Gurobi 
 
 
 #The ? can be put infront of commands, variables, and functions to get more information.
@@ -19,8 +19,8 @@ include("bio_mod.jl")
 model, A, V = build_bio_model("bio_dat.jl")
 print(model) # prints the model instance
 
-set_optimizer(model, Clp.Optimizer)
-set_optimizer_attribute(model, "LogLevel", 1)
+set_optimizer(model, Gurobi.Optimizer)
+#set_optimizer_attribute(model, "LogLevel", 1)
 # set_optimizer(m, Gurobi.Optimizer)
 optimize!(model)
 
