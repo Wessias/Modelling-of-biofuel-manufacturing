@@ -56,5 +56,5 @@ function build_bio_model(data_file::String)
   )  # Limited amount of petrol diesel available [l]
 
 
-  return model, A, V
+  return model, A, V, petrol_limit_constraint, water_limit_constraint, area_limit_constraint, oil_demand_constraint
 end
