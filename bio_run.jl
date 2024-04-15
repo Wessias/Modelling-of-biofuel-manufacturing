@@ -36,10 +36,11 @@ set_optimizer_attributes(model, "OutputFlag" => 0)  # Set OutputFlag to 0 (turns
 
 
 #Prepare for level 100 programming below
+reduction_percents = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 
 # Sensitivity analysis for petrol diesel availability
-function sens_analys_petrol()
-  for reduction_percentage in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+function sens_analys_petrol(reduction_percentages)
+  for reduction_percentage in reduction_percentages
     new_petrol_max = Petrol_max * (1 - reduction_percentage)
     set_normalized_rhs(petrol_limit_constraint, new_petrol_max)
     optimize!(model)
@@ -54,8 +55,8 @@ end
 
 
 # Sensitivity analysis for water availability
-function sens_analys_water()
-for reduction_percentage in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+function sens_analys_water(reduction_percentages)
+for reduction_percentage in reduction_percentages
   new_water_max = Water_max * (1 - reduction_percentage)
   set_normalized_rhs(water_limit_constraint, new_water_max)
   optimize!(model)
@@ -67,8 +68,8 @@ end
 end
 
 # Sensitivity analysis for area availability
-function sens_analys_area()
-for reduction_percentage in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+function sens_analys_area(reduction_percentages)
+for reduction_percentage in reduction_percentages
   new_area_max = Area_max * (1 - reduction_percentage)
   set_normalized_rhs(area_limit_constraint, new_area_max)
   optimize!(model)
@@ -79,7 +80,7 @@ for reduction_percentage in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 end
 end
 
-sens_analys_petrol()
+sens_analys_petrol(reduction_percents)
 
 
 
