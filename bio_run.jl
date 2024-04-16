@@ -80,7 +80,23 @@ for reduction_percentage in reduction_percentages
 end
 end
 
-sens_analys_petrol(reduction_percents)
+#sens_analys_petrol(reduction_percents)
+
+function find_lower_bound(b_0, constraint)
+  n = 0
+  optimize!(model)
+  while is_solved_and_feasible(model)
+    n = n + 1
+    new_b = b_0 - n
+    set_normalized_rhs(constraint, new_b)
+    optimize!(model)
+  end
+  println("n = ", n -1)
+  println("Lowest value while still feasible: ", (b_0 - n + 1))
+  println("Non-feasible at ",constraint)
+end
+
+find_lower_bound(Area_max, area_limit_constraint)
 
 
 
