@@ -34,6 +34,35 @@ println("Shadow price of petrol: ", shadow_price(petrol_limit_constraint))
 println("Shadow price of area: ", shadow_price(area_limit_constraint))
 
 println("--------------------------------")
+
+
+#Stuff below is from https://jump.dev/JuMP.jl/stable/tutorials/linear/basis/ and used for 3(g)
+for i in I
+  println("A_$i ", get_attribute(A[i], MOI.VariableBasisStatus()))
+  println("V_$i ",get_attribute(V[i], MOI.VariableBasisStatus()))
+end
+
+v_basis = Dict(
+    xi => get_attribute(xi, MOI.VariableBasisStatus()) for
+    xi in all_variables(model)
+)
+#Get c_basis
+c_basis = Dict(
+    ci => get_attribute(ci, MOI.ConstraintBasisStatus()) for ci in
+    all_constraints(model; include_variable_in_set_constraints = false)
+)
+
+
+matrix = lp_matrix_data(model)
+
+s_column = zeros(size(matrix.A, 1))
+s_column[1] = 1
+
+B = hcat(matrix.A[:, [1, 3, 5, 6]], s_column)
+b = ifelse.(isfinite.(matrix.b_lower), matrix.b_lower, matrix.b_upper)
+
+
+
 #println(solution_summary(model))
 
 set_optimizer_attributes(model, "OutputFlag" => 0)  # Set OutputFlag to 0 (turns off most output)
@@ -86,6 +115,7 @@ end
 
 #sens_analys_petrol(reduction_percents)
 
+#Loop and restrict constraint by 1 unit til no solution exists.
 function find_lower_bound(b_0, constraint)
   n = 0
   optimize!(model)
@@ -97,11 +127,17 @@ function find_lower_bound(b_0, constraint)
 
   end
   println("n = ", n -1)
-  println("Lowest value while still feasible: ", (b_0 - n + 1))
+  println("Lowest (integer) value while still feasible: ", (b_0 - n + 1))
   println("Non-feasible at ",constraint)
+  set_normalized_rhs(constraint, b_0) #Set back constraint to orginial
 end
 
-find_lower_bound(Petrol_max, petrol_limit_constraint)
+#find_lower_bound(Petrol_max, petrol_limit_constraint) #Takes a long time.
+#find_lower_bound(Water_max, water_limit_constraint)
+#find_lower_bound(Area_max, area_limit_constraint)
+
+
+
 
 
 
