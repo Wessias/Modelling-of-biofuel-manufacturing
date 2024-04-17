@@ -46,20 +46,21 @@ v_basis = Dict(
     xi => get_attribute(xi, MOI.VariableBasisStatus()) for
     xi in all_variables(model)
 )
-#Get c_basis
-c_basis = Dict(
+#Get which constraint gives non-basic slack variable
+constr_basis = Dict(
     ci => get_attribute(ci, MOI.ConstraintBasisStatus()) for ci in
     all_constraints(model; include_variable_in_set_constraints = false)
 )
 
-
+#Gives the matrix A of the model (in standard notation)
 matrix = lp_matrix_data(model)
 
 s_column = zeros(size(matrix.A, 1))
-s_column[1] = 1
+s_column[2] = 1
 
-B = hcat(matrix.A[:, [1, 3, 5, 6]], s_column)
-b = ifelse.(isfinite.(matrix.b_lower), matrix.b_lower, matrix.b_upper)
+B = hcat(matrix.A[:, [1, 3, 5, 6]], s_column) #B in formula for z^new
+b = ifelse.(isfinite.(matrix.b_lower), matrix.b_lower, matrix.b_upper) #b in formula for z^new
+c_b = [-138.84; -116.91; 0.5255; 1.16; 0] #c_b^T in formula for z^new
 
 
 
