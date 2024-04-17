@@ -29,6 +29,10 @@ println("z =  ", objective_value(model))   		# display the optimal solution
 println("A =  ", value.(A.data))  
 println("V =  ", value.(V.data))               # f.(arr) applies f to all elements of arr
 
+println("Shadow price of water: ", shadow_price(water_limit_constraint))
+println("Shadow price of petrol: ", shadow_price(petrol_limit_constraint))
+println("Shadow price of area: ", shadow_price(area_limit_constraint))
+
 println("--------------------------------")
 #println(solution_summary(model))
 
@@ -90,13 +94,14 @@ function find_lower_bound(b_0, constraint)
     new_b = b_0 - n
     set_normalized_rhs(constraint, new_b)
     optimize!(model)
+
   end
   println("n = ", n -1)
   println("Lowest value while still feasible: ", (b_0 - n + 1))
   println("Non-feasible at ",constraint)
 end
 
-find_lower_bound(Area_max, area_limit_constraint)
+find_lower_bound(Petrol_max, petrol_limit_constraint)
 
 
 
