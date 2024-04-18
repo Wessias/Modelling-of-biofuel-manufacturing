@@ -8,6 +8,8 @@ using JuMP      #load the package JuMP
 using Clp       #load the package Clp (an open linear-programming solver)
 using Gurobi     #load package Gurobi 
 using MathOptInterface
+#using LinearAlgebra
+import DataFrames
 
 
 #The ? can be put infront of commands, variables, and functions to get more information.
@@ -60,11 +62,36 @@ s_column[2] = 1
 
 B = hcat(matrix.A[:, [1, 3, 5, 6]], s_column) #B in formula for z^new
 b = ifelse.(isfinite.(matrix.b_lower), matrix.b_lower, matrix.b_upper) #b in formula for z^new
-c_b = [-138.84; -116.91; 0.5255; 1.16; 0] #c_b^T in formula for z^new
+c_b = [-138.84 -116.91 0.5255 1.16 0] #c_b^T in formula for z^new
+
+# Create a 5x5 identity matrix
+#I_5 = [1 0 0 0 0;
+#      0 1 0 0 0;
+##      0 0 1 0 0;
+ #     0 0 0 1 0;
+ #     0 0 0 0 1]
 
 
 
 #println(solution_summary(model))
+report = lp_sensitivity_report(model)
+
+function constraint_report(c::ConstraintRef)
+  return (
+      name = name(c),
+      value = value(c),
+      rhs = normalized_rhs(c),
+      slack = normalized_rhs(c) - value(c),
+      shadow_price = shadow_price(c),
+      allowed_decrease = report[c][1],
+      allowed_increase = report[c][2],
+  )
+end
+
+constraint_df = DataFrames.DataFrame(
+    constraint_report(ci) for (F, S) in list_of_constraint_types(model) for
+    ci in all_constraints(model, F, S) if F == AffExpr
+)
 
 set_optimizer_attributes(model, "OutputFlag" => 0)  # Set OutputFlag to 0 (turns off most output)
 
@@ -135,7 +162,7 @@ end
 
 #find_lower_bound(Petrol_max, petrol_limit_constraint) #Takes a long time.
 #find_lower_bound(Water_max, water_limit_constraint)
-#find_lower_bound(Area_max, area_limit_constraint)
+find_lower_bound(Area_max, area_limit_constraint)
 
 
 
