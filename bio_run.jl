@@ -62,14 +62,14 @@ s_column[2] = 1
 
 B = hcat(matrix.A[:, [1, 3, 5, 6]], s_column) #B in formula for z^new
 b = ifelse.(isfinite.(matrix.b_lower), matrix.b_lower, matrix.b_upper) #b in formula for z^new
-c_b = [-138.84 -116.91 0.5255 1.16 0] #c_b^T in formula for z^new
+c_b = [-154.26666666666668 -129.9 0.5255000000000001 1.16 0] #c_b^T in formula for z^new
 
 # Create a 5x5 identity matrix
-#I_5 = [1 0 0 0 0;
-#      0 1 0 0 0;
-##      0 0 1 0 0;
- #     0 0 0 1 0;
- #     0 0 0 0 1]
+I_5 = [1 0 0 0 0;
+      0 1 0 0 0;
+      0 0 1 0 0;
+      0 0 0 1 0;
+      0 0 0 0 1]
 
 
 
@@ -162,7 +162,7 @@ end
 
 #find_lower_bound(Petrol_max, petrol_limit_constraint) #Takes a long time.
 #find_lower_bound(Water_max, water_limit_constraint)
-find_lower_bound(Area_max, area_limit_constraint)
+#find_lower_bound(Area_max, area_limit_constraint)
 
 
 

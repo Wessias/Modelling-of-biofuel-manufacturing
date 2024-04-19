@@ -29,14 +29,14 @@ function build_bio_model(data_file::String)
   #Maximize profit <=> maximize "Earnt - cost of petrol and methanol"
   @objective(model, Max,
         sum((1 .- T) .* P .* V - P_p .* (1 .- B) .* V ) -
-        sum(P_m .* 0.2 .* O .* Y .* A)
+        sum(P_m .* (0.2/0.9) .* O .* Y .* A)
     )
 
 
   #Constraints
   # Constraints
   @constraint(model, biodiesel_production_constraint,
-    0.9 * sum(B[j] * V[j] for j in J) == sum(O[i] * Y[i] * A[i] for i in I)
+     sum(B[j] * V[j] for j in J) == 0.9 *sum(O[i] * Y[i] * A[i] for i in I)
   )  # Production of biodiesel and vegetable oil should match [l]
 
   @constraint(model, oil_demand_constraint,
