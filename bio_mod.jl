@@ -29,7 +29,7 @@ function build_bio_model(data_file::String)
   #Maximize profit <=> maximize "Earnt - cost of petrol and methanol"
   @objective(model, Max,
         sum((1 .- T) .* P .* V - P_p .* (1 .- B) .* V ) -
-        sum(P_m .* (0.2/0.9) .* O .* Y .* A)
+        sum(P_m .* (0.2) .* O .* Y .* A)
     )
 
 
