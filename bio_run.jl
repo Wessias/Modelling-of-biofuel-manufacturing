@@ -27,7 +27,13 @@ optimize!(model)
 
 println("z =  ", objective_value(model))   		# display the optimal solution
 println("A =  ", value.(A.data))  
-println("V =  ", value.(V.data))               # f.(arr) applies f to all elements of arr
+println("V =  ", value.(V.data))     
+
+
+#println("Shadow Prices (Dual Values): ", shadow_prices)
+#println("Shadow price area:", shadow_price(area_limit_constraint))
+#println("Shadow price petrol:", shadow_price(petrol_limit_constraint))
+#println("shadow price water;", shadow_price(water_limit_constraint))          # f.(arr) applies f to all elements of arr
 
 println("--------------------------------")
 #println(solution_summary(model))
@@ -96,7 +102,9 @@ function find_lower_bound(b_0, constraint)
   println("Non-feasible at ",constraint)
 end
 
-find_lower_bound(Area_max, area_limit_constraint)
+#find_lower_bound(Area_max, area_limit_constraint)
+
+
 
 
 
